@@ -1,0 +1,27 @@
+name: weather
+description: "A new Flutter project."
+publish_to: "none"
+
+version: 0.0.1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  shared_preferences: ^2.5.3
+  flutter_bloc: ^9.1.1
+  provider: ^6.1.5+1
+  validatorless: ^1.2.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
