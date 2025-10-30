@@ -2,7 +2,7 @@ name: weather
 description: "A new Flutter project."
 publish_to: "none"
 
-version: 0.0.1
+version: 0.1.0
 
 environment:
   sdk: ^3.9.2
@@ -17,12 +17,17 @@ dependencies:
   provider: ^6.1.5+1
   validatorless: ^1.2.5
   dio: ^5.9.0
+  geolocator: ^14.0.2
+  uuid: ^4.5.1
+  http: ^1.5.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^5.0.0
+  mocktail: ^1.0.4
+  bloc_test: ^10.0.0
 
 flutter:
   uses-material-design: true
