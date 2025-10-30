@@ -16,6 +16,7 @@ dependencies:
   flutter_bloc: ^9.1.1
   provider: ^6.1.5+1
   validatorless: ^1.2.5
+  dio: ^5.9.0
 
 dev_dependencies:
   flutter_test:
