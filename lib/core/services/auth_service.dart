@@ -39,8 +39,6 @@ class AuthService {
   }
 
   Future<void> logout() async {
-    await _storage.remove(_keyEmail);
-    await _storage.remove(_keyTimestamp);
-    await _storage.remove(_keyToken);
+    await _storage.clear();
   }
 }
