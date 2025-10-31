@@ -49,7 +49,9 @@ class _WeatherScreenState extends State<WeatherScreen> with SnackbarMixin {
             icon: const Icon(Icons.logout),
             onPressed: () {
               context.read<AuthCubit>().logout();
-              Navigator.of(context).pushReplacementNamed(AppRoutes.login);
+              Navigator.of(
+                context,
+              ).pushNamedAndRemoveUntil(AppRoutes.login, (route) => false);
             },
           ),
         ],

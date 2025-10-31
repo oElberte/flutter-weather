@@ -23,9 +23,13 @@ class _SplashScreenState extends State<SplashScreen> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthAuthenticated) {
-          Navigator.of(context).pushReplacementNamed(AppRoutes.weather);
+          Navigator.of(
+            context,
+          ).pushNamedAndRemoveUntil(AppRoutes.weather, (route) => false);
         } else if (state is AuthUnauthenticated) {
-          Navigator.of(context).pushReplacementNamed(AppRoutes.login);
+          Navigator.of(
+            context,
+          ).pushNamedAndRemoveUntil(AppRoutes.login, (route) => false);
         }
       },
       child: Scaffold(
