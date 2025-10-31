@@ -19,8 +19,9 @@ void main() {
   late LocalStorage storage;
 
   setUp(() async {
+    SharedPreferencesStorage.resetInstance();
     SharedPreferences.setMockInitialValues({});
-    storage = SharedPreferencesStorage();
+    storage = await SharedPreferencesStorage.getInstance();
     mockApiService = MockWeatherApiService();
     mockLocationService = MockLocationService();
     repository = WeatherRepository(

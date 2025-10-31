@@ -36,9 +36,10 @@ void main() {
       );
       await tester.enterText(
         find.widgetWithText(TextFormField, 'Enter your password'),
-        'Password1',
+        'Password123!',
       );
 
+      await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
       await tester.pump();
 
       expect(find.text('Enter a valid email'), findsOneWidget);
@@ -56,6 +57,7 @@ void main() {
         'Pass1',
       );
 
+      await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
       await tester.pump();
 
       expect(
@@ -78,6 +80,7 @@ void main() {
         'password1',
       );
 
+      await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
       await tester.pump();
 
       expect(
@@ -86,13 +89,13 @@ void main() {
       );
     });
 
-    testWidgets('login button should be disabled when form is invalid', (
+    testWidgets('login button should be enabled even when form is empty', (
       tester,
     ) async {
       await tester.pumpWidget(createLoginScreen());
 
       final loginButton = find.widgetWithText(ElevatedButton, 'Login');
-      expect(tester.widget<ElevatedButton>(loginButton).onPressed, isNull);
+      expect(tester.widget<ElevatedButton>(loginButton).onPressed, isNotNull);
     });
 
     testWidgets('login button should be enabled when form is valid', (
@@ -106,7 +109,7 @@ void main() {
       );
       await tester.enterText(
         find.widgetWithText(TextFormField, 'Enter your password'),
-        'Password123',
+        'Password123!',
       );
 
       await tester.pump();
@@ -130,14 +133,13 @@ void main() {
       );
       await tester.enterText(
         find.widgetWithText(TextFormField, 'Enter your password'),
-        'Password123',
+        'Password123!',
       );
 
       await tester.pump();
 
       await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
-      await tester.pump();
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       expect(
         find.text('Please enter valid email and password'),

@@ -9,8 +9,9 @@ void main() {
   late AuthService authService;
 
   setUp(() async {
+    SharedPreferencesStorage.resetInstance();
     SharedPreferences.setMockInitialValues({});
-    storage = SharedPreferencesStorage();
+    storage = await SharedPreferencesStorage.getInstance();
     authService = AuthService(storage);
   });
 
