@@ -13,22 +13,33 @@ import 'package:weather/features/weather/data/weather_repository.dart';
 
 class AppProviders {
   static List<Provider<dynamic>> core() => [
-    Provider<LocalStorage>(create: (_) => SharedPreferencesStorage()),
-    Provider<RestClient>(create: (_) => DioRestClient()),
+    Provider<LocalStorage>(
+      create: (context) => SharedPreferencesStorage(),
+    ),
+    Provider<RestClient>(
+      create: (context) => DioRestClient(),
+    ),
     Provider<AuthService>(
-      create: (context) => AuthService(context.read<LocalStorage>()),
+      create: (context) => AuthService(
+        context.read<LocalStorage>(),
+      ),
     ),
     Provider<AuthRepository>(
-      create: (context) => AuthRepository(context.read<AuthService>()),
+      create: (context) => AuthRepository(
+        context.read<AuthService>(),
+      ),
     ),
   ];
 
   static List<Provider<dynamic>> weather() => [
     Provider<WeatherApiService>(
-      create: (context) =>
-          WeatherApiService(restClient: context.read<RestClient>()),
+      create: (context) => WeatherApiService(
+        restClient: context.read<RestClient>(),
+      ),
     ),
-    Provider<LocationService>(create: (_) => LocationService()),
+    Provider<LocationService>(
+      create: (context) => LocationService(),
+    ),
     Provider<WeatherRepository>(
       create: (context) => WeatherRepository(
         weatherApi: context.read<WeatherApiService>(),
@@ -42,8 +53,9 @@ class AppProviders {
 class AppBlocProviders {
   static List<BlocProvider> core() => [
     BlocProvider<AuthCubit>(
-      create: (context) =>
-          AuthCubit(authRepository: context.read<AuthRepository>()),
+      create: (context) => AuthCubit(
+        authRepository: context.read<AuthRepository>(),
+      ),
     ),
   ];
 }
