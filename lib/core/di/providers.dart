@@ -5,16 +5,15 @@ import 'package:weather/core/interfaces/rest_client.dart';
 import 'package:weather/core/services/auth_service.dart';
 import 'package:weather/core/services/dio_rest_client.dart';
 import 'package:weather/core/services/location_service.dart';
-import 'package:weather/core/services/shared_preferences_storage.dart';
 import 'package:weather/core/services/weather_api_service.dart';
 import 'package:weather/features/auth/data/auth_repository.dart';
 import 'package:weather/features/auth/presentation/auth_cubit.dart';
 import 'package:weather/features/weather/data/weather_repository.dart';
 
 class AppProviders {
-  static List<Provider<dynamic>> core() => [
+  static List<Provider<dynamic>> core(LocalStorage storage) => [
     Provider<LocalStorage>(
-      create: (context) => SharedPreferencesStorage(),
+      create: (context) => storage,
     ),
     Provider<RestClient>(
       create: (context) => DioRestClient(),

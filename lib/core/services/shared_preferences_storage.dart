@@ -2,14 +2,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather/core/interfaces/local_storage.dart';
 
 class SharedPreferencesStorage implements LocalStorage {
-  SharedPreferencesStorage() {
-    _init();
+  SharedPreferencesStorage._(this._prefs);
+
+  static SharedPreferencesStorage? _instance;
+  final SharedPreferences _prefs;
+
+  static Future<SharedPreferencesStorage> getInstance() async {
+    if (_instance == null) {
+      final prefs = await SharedPreferences.getInstance();
+      _instance = SharedPreferencesStorage._(prefs);
+    }
+    return _instance!;
   }
 
-  late final SharedPreferences _prefs;
-
-  Future<void> _init() async {
-    _prefs = await SharedPreferences.getInstance();
+  // For testing purposes only
+  static void resetInstance() {
+    _instance = null;
   }
 
   @override

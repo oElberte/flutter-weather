@@ -3,23 +3,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:weather/core/config/routes.dart';
 import 'package:weather/core/di/providers.dart';
+import 'package:weather/core/services/shared_preferences_storage.dart';
 import 'package:weather/features/auth/presentation/auth_cubit.dart';
 import 'package:weather/features/auth/presentation/auth_state.dart';
 import 'package:weather/features/auth/presentation/login_screen.dart';
 import 'package:weather/features/auth/presentation/splash_screen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  final storage = await SharedPreferencesStorage.getInstance();
+  runApp(MyApp(storage: storage));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.storage});
+
+  final SharedPreferencesStorage storage;
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: AppProviders.core(),
+      providers: AppProviders.core(storage),
       child: MultiBlocProvider(
         providers: AppBlocProviders.core(),
         child: MaterialApp(
