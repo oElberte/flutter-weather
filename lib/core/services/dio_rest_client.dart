@@ -19,17 +19,21 @@ class DioRestClient implements RestClient {
     Map<String, dynamic>? headers,
     Duration? timeout,
   }) async {
-    final response = await _dio.get(
-      path,
-      queryParameters: queryParameters,
-      options: Options(headers: headers, receiveTimeout: timeout),
-    );
+    try {
+      final response = await _dio.get(
+        path,
+        queryParameters: queryParameters,
+        options: Options(headers: headers, receiveTimeout: timeout),
+      );
 
-    return RestResponse(
-      data: response.data,
-      statusCode: response.statusCode ?? 0,
-      statusMessage: response.statusMessage,
-    );
+      return RestResponse(
+        data: response.data,
+        statusCode: response.statusCode ?? 0,
+        statusMessage: response.statusMessage,
+      );
+    } on DioException catch (e) {
+      return _handleDioException(e);
+    }
   }
 
   @override
@@ -40,18 +44,22 @@ class DioRestClient implements RestClient {
     Map<String, dynamic>? headers,
     Duration? timeout,
   }) async {
-    final response = await _dio.post(
-      path,
-      data: data,
-      queryParameters: queryParameters,
-      options: Options(headers: headers, receiveTimeout: timeout),
-    );
+    try {
+      final response = await _dio.post(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: Options(headers: headers, receiveTimeout: timeout),
+      );
 
-    return RestResponse(
-      data: response.data,
-      statusCode: response.statusCode ?? 0,
-      statusMessage: response.statusMessage,
-    );
+      return RestResponse(
+        data: response.data,
+        statusCode: response.statusCode ?? 0,
+        statusMessage: response.statusMessage,
+      );
+    } on DioException catch (e) {
+      return _handleDioException(e);
+    }
   }
 
   @override
@@ -62,18 +70,22 @@ class DioRestClient implements RestClient {
     Map<String, dynamic>? headers,
     Duration? timeout,
   }) async {
-    final response = await _dio.put(
-      path,
-      data: data,
-      queryParameters: queryParameters,
-      options: Options(headers: headers, receiveTimeout: timeout),
-    );
+    try {
+      final response = await _dio.put(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: Options(headers: headers, receiveTimeout: timeout),
+      );
 
-    return RestResponse(
-      data: response.data,
-      statusCode: response.statusCode ?? 0,
-      statusMessage: response.statusMessage,
-    );
+      return RestResponse(
+        data: response.data,
+        statusCode: response.statusCode ?? 0,
+        statusMessage: response.statusMessage,
+      );
+    } on DioException catch (e) {
+      return _handleDioException(e);
+    }
   }
 
   @override
@@ -84,17 +96,37 @@ class DioRestClient implements RestClient {
     Map<String, dynamic>? headers,
     Duration? timeout,
   }) async {
-    final response = await _dio.delete(
-      path,
-      data: data,
-      queryParameters: queryParameters,
-      options: Options(headers: headers, receiveTimeout: timeout),
-    );
+    try {
+      final response = await _dio.delete(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: Options(headers: headers, receiveTimeout: timeout),
+      );
 
-    return RestResponse(
-      data: response.data,
-      statusCode: response.statusCode ?? 0,
-      statusMessage: response.statusMessage,
-    );
+      return RestResponse(
+        data: response.data,
+        statusCode: response.statusCode ?? 0,
+        statusMessage: response.statusMessage,
+      );
+    } on DioException catch (e) {
+      return _handleDioException(e);
+    }
+  }
+
+  Never _handleDioException(DioException e) {
+    if (e.type == DioExceptionType.connectionTimeout ||
+        e.type == DioExceptionType.sendTimeout ||
+        e.type == DioExceptionType.receiveTimeout) {
+      throw NetworkTimeoutException();
+    }
+
+    if (e.type == DioExceptionType.connectionError ||
+        e.type == DioExceptionType.unknown) {
+      throw NetworkConnectionException();
+    }
+
+    // For other errors, rethrow
+    throw e;
   }
 }

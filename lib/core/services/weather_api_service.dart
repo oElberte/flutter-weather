@@ -1,5 +1,8 @@
 import 'package:weather/core/interfaces/rest_client.dart';
 
+export 'package:weather/core/interfaces/rest_client.dart'
+    show NetworkConnectionException, NetworkTimeoutException;
+
 class WeatherApiService {
   WeatherApiService({required RestClient restClient})
     : _restClient = restClient;
@@ -43,10 +46,6 @@ class WeatherApiService {
     }
   }
 }
-
-class NetworkConnectionException implements Exception {}
-
-class NetworkTimeoutException implements Exception {}
 
 class RateLimitException implements Exception {}
 

@@ -42,3 +42,8 @@ class RestResponse {
   final int statusCode;
   final String? statusMessage;
 }
+
+// Network-level exceptions thrown by RestClient implementations
+class NetworkConnectionException implements Exception {}
+
+class NetworkTimeoutException implements Exception {}
