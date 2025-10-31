@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:validatorless/validatorless.dart';
+import 'package:weather/core/config/routes.dart';
 import 'package:weather/core/mixins/snackbar_mixin.dart';
 import 'package:weather/features/auth/presentation/auth_cubit.dart';
 import 'package:weather/features/auth/presentation/auth_state.dart';
@@ -69,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> with SnackbarMixin {
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthAuthenticated) {
-            Navigator.of(context).pushReplacementNamed('/weather');
+            Navigator.of(context).pushReplacementNamed(AppRoutes.weather);
           } else if (state is AuthError) {
             showError(context, state.message);
           }

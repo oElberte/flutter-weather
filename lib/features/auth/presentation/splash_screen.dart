@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather/core/config/routes.dart';
 import 'package:weather/features/auth/presentation/auth_cubit.dart';
 import 'package:weather/features/auth/presentation/auth_state.dart';
 
@@ -22,9 +23,9 @@ class _SplashScreenState extends State<SplashScreen> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthAuthenticated) {
-          Navigator.of(context).pushReplacementNamed('/weather');
+          Navigator.of(context).pushReplacementNamed(AppRoutes.weather);
         } else if (state is AuthUnauthenticated) {
-          Navigator.of(context).pushReplacementNamed('/login');
+          Navigator.of(context).pushReplacementNamed(AppRoutes.login);
         }
       },
       child: Scaffold(

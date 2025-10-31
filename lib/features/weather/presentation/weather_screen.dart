@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
+import 'package:weather/core/config/routes.dart';
+import 'package:weather/core/di/providers.dart';
 import 'package:weather/core/mixins/snackbar_mixin.dart';
 import 'package:weather/features/auth/presentation/auth_cubit.dart';
+import 'package:weather/features/weather/data/weather_repository.dart';
 import 'package:weather/features/weather/presentation/weather_cubit.dart';
 import 'package:weather/features/weather/presentation/weather_state.dart';
 import 'package:weather/features/weather/presentation/widgets/weather_content_view.dart';
@@ -10,6 +14,15 @@ import 'package:weather/features/weather/presentation/widgets/weather_loading_vi
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
+
+  static Widget withProviders() => MultiProvider(
+    providers: AppProviders.weather(),
+    child: BlocProvider(
+      create: (context) =>
+          WeatherCubit(weatherRepository: context.read<WeatherRepository>()),
+      child: const WeatherScreen(),
+    ),
+  );
 
   @override
   State<WeatherScreen> createState() => _WeatherScreenState();
@@ -36,7 +49,7 @@ class _WeatherScreenState extends State<WeatherScreen> with SnackbarMixin {
             icon: const Icon(Icons.logout),
             onPressed: () {
               context.read<AuthCubit>().logout();
-              Navigator.of(context).pushReplacementNamed('/login');
+              Navigator.of(context).pushReplacementNamed(AppRoutes.login);
             },
           ),
         ],
