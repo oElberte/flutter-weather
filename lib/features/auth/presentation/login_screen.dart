@@ -17,11 +17,13 @@ class _LoginScreenState extends State<LoginScreen> with SnackbarMixin {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _obscurePassword = ValueNotifier<bool>(true);
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _obscurePassword.dispose();
     super.dispose();
   }
 
@@ -108,34 +110,9 @@ class _LoginScreenState extends State<LoginScreen> with SnackbarMixin {
                             enabled: !isLoading,
                           ),
                           const SizedBox(height: 16),
-                          TextFormField(
+                          _PasswordField(
                             controller: _passwordController,
-                            obscureText: true,
-                            decoration: const InputDecoration(
-                              labelText: 'Password',
-                              hintText: 'Enter your password',
-                              prefixIcon: Icon(Icons.lock),
-                              border: OutlineInputBorder(),
-                            ),
-                            validator: Validatorless.multiple([
-                              Validatorless.required('Password is required'),
-                              Validatorless.min(
-                                6,
-                                'Password must be at least 6 characters',
-                              ),
-                              Validatorless.regex(
-                                RegExp(r'[A-Z]'),
-                                'Password must contain at least 1 uppercase letter',
-                              ),
-                              Validatorless.regex(
-                                RegExp(r'[a-z]'),
-                                'Password must contain at least 1 lowercase letter',
-                              ),
-                              Validatorless.regex(
-                                RegExp(r'[0-9]'),
-                                'Password must contain at least 1 number',
-                              ),
-                            ]),
+                            obscurePassword: _obscurePassword,
                             enabled: !isLoading,
                           ),
                           const SizedBox(height: 24),
@@ -170,6 +147,69 @@ class _LoginScreenState extends State<LoginScreen> with SnackbarMixin {
           );
         },
       ),
+    );
+  }
+}
+
+class _PasswordField extends StatelessWidget {
+  const _PasswordField({
+    required this.controller,
+    required this.obscurePassword,
+    required this.enabled,
+  });
+
+  final TextEditingController controller;
+  final ValueNotifier<bool> obscurePassword;
+  final bool enabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: obscurePassword,
+      builder: (context, isObscure, _) {
+        return TextFormField(
+          controller: controller,
+          obscureText: isObscure,
+          decoration: InputDecoration(
+            labelText: 'Password',
+            hintText: 'Enter your password',
+            prefixIcon: const Icon(Icons.lock),
+            border: const OutlineInputBorder(),
+            suffixIcon: IconButton(
+              icon: Icon(
+                isObscure ? Icons.visibility_off : Icons.visibility,
+              ),
+              onPressed: () {
+                obscurePassword.value = !isObscure;
+              },
+            ),
+          ),
+          validator: Validatorless.multiple([
+            Validatorless.required('Password is required'),
+            Validatorless.min(
+              6,
+              'Password must be at least 6 characters',
+            ),
+            Validatorless.regex(
+              RegExp(r'[A-Z]'),
+              'Password must contain at least 1 uppercase letter',
+            ),
+            Validatorless.regex(
+              RegExp(r'[a-z]'),
+              'Password must contain at least 1 lowercase letter',
+            ),
+            Validatorless.regex(
+              RegExp(r'[0-9]'),
+              'Password must contain at least 1 number',
+            ),
+            Validatorless.regex(
+              RegExp(r'[!@#$%^&*(),.?":{}|<>]'),
+              'Password must contain at least 1 special character',
+            ),
+          ]),
+          enabled: enabled,
+        );
+      },
     );
   }
 }
