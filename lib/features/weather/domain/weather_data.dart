@@ -39,22 +39,6 @@ class WeatherData {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'cityName': cityName,
-      'temperature': temperature,
-      'feelsLike': feelsLike,
-      'description': description,
-      'iconCode': iconCode,
-      'humidity': humidity,
-      'windSpeed': windSpeed,
-      'sunrise': sunrise.millisecondsSinceEpoch,
-      'sunset': sunset.millisecondsSinceEpoch,
-      'dailyForecast': dailyForecast.map((day) => day.toJson()).toList(),
-      'timestamp': timestamp.millisecondsSinceEpoch,
-    };
-  }
-
   factory WeatherData.fromCache(Map<String, dynamic> json) {
     return WeatherData(
       cityName: json['cityName'] as String,
@@ -71,6 +55,22 @@ class WeatherData {
           .toList(),
       timestamp: DateTime.fromMillisecondsSinceEpoch(json['timestamp'] as int),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'cityName': cityName,
+      'temperature': temperature,
+      'feelsLike': feelsLike,
+      'description': description,
+      'iconCode': iconCode,
+      'humidity': humidity,
+      'windSpeed': windSpeed,
+      'sunrise': sunrise.millisecondsSinceEpoch,
+      'sunset': sunset.millisecondsSinceEpoch,
+      'dailyForecast': dailyForecast.map((day) => day.toJson()).toList(),
+      'timestamp': timestamp.millisecondsSinceEpoch,
+    };
   }
 
   final String cityName;
@@ -109,16 +109,6 @@ class DailyForecast {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'date': date.millisecondsSinceEpoch,
-      'tempMin': tempMin,
-      'tempMax': tempMax,
-      'description': description,
-      'iconCode': iconCode,
-    };
-  }
-
   factory DailyForecast.fromCache(Map<String, dynamic> json) {
     return DailyForecast(
       date: DateTime.fromMillisecondsSinceEpoch(json['date'] as int),
@@ -127,6 +117,16 @@ class DailyForecast {
       description: json['description'] as String,
       iconCode: json['iconCode'] as String,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'date': date.millisecondsSinceEpoch,
+      'tempMin': tempMin,
+      'tempMax': tempMax,
+      'description': description,
+      'iconCode': iconCode,
+    };
   }
 
   final DateTime date;
