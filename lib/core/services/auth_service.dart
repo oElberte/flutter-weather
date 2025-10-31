@@ -1,10 +1,10 @@
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+import 'package:weather/core/interfaces/local_storage.dart';
 
 class AuthService {
-  final SharedPreferences _prefs;
+  AuthService(this._storage);
 
-  AuthService(this._prefs);
+  final LocalStorage _storage;
 
   static const String _keyEmail = 'user_email';
   static const String _keyTimestamp = 'login_timestamp';
@@ -14,33 +14,33 @@ class AuthService {
     final token = const Uuid().v4();
     final timestamp = DateTime.now().millisecondsSinceEpoch;
 
-    await _prefs.setString(_keyEmail, email);
-    await _prefs.setInt(_keyTimestamp, timestamp);
-    await _prefs.setString(_keyToken, token);
+    await _storage.setString(_keyEmail, email);
+    await _storage.setInt(_keyTimestamp, timestamp);
+    await _storage.setString(_keyToken, token);
 
     return true;
   }
 
   Future<bool> isLoggedIn() async {
-    final token = _prefs.getString(_keyToken);
+    final token = _storage.getString(_keyToken);
     return token != null;
   }
 
   String? getEmail() {
-    return _prefs.getString(_keyEmail);
+    return _storage.getString(_keyEmail);
   }
 
   String? getSessionToken() {
-    return _prefs.getString(_keyToken);
+    return _storage.getString(_keyToken);
   }
 
   int? getLoginTimestamp() {
-    return _prefs.getInt(_keyTimestamp);
+    return _storage.getInt(_keyTimestamp);
   }
 
   Future<void> logout() async {
-    await _prefs.remove(_keyEmail);
-    await _prefs.remove(_keyTimestamp);
-    await _prefs.remove(_keyToken);
+    await _storage.remove(_keyEmail);
+    await _storage.remove(_keyTimestamp);
+    await _storage.remove(_keyToken);
   }
 }

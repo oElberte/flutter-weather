@@ -1,37 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weather/core/interfaces/local_storage.dart';
+import 'package:weather/core/interfaces/rest_client.dart';
 import 'package:weather/core/services/auth_service.dart';
+import 'package:weather/core/services/dio_rest_client.dart';
+import 'package:weather/core/services/location_service.dart';
+import 'package:weather/core/services/shared_preferences_storage.dart';
+import 'package:weather/core/services/weather_api_service.dart';
 import 'package:weather/features/auth/data/auth_repository.dart';
 import 'package:weather/features/auth/presentation/auth_cubit.dart';
 import 'package:weather/features/auth/presentation/login_screen.dart';
 import 'package:weather/features/auth/presentation/splash_screen.dart';
+import 'package:weather/features/weather/data/weather_repository.dart';
+import 'package:weather/features/weather/presentation/weather_cubit.dart';
 import 'package:weather/features/weather/presentation/weather_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final sharedPreferences = await SharedPreferences.getInstance();
 
-  runApp(MyApp(sharedPreferences: sharedPreferences));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key, required this.sharedPreferences});
-
-  final SharedPreferences sharedPreferences;
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<AuthService>(create: (_) => AuthService(sharedPreferences)),
-        Provider<AuthRepository>(
-          create: (context) => AuthRepository(context.read<AuthService>()),
-        ),
+        Provider<LocalStorage>(create: (context) => SharedPreferencesStorage()),
+        Provider<RestClient>(create: (context) => DioRestClient()),
       ],
-      child: BlocProvider(
-        create: (context) => AuthCubit(context.read<AuthRepository>()),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) =>
+                AuthCubit(authRepository: context.read<AuthRepository>()),
+          ),
+          BlocProvider(
+            create: (context) => WeatherCubit(
+              weatherRepository: context.read<WeatherRepository>(),
+            ),
+          ),
+        ],
         child: MaterialApp(
           title: 'Weather App',
           debugShowCheckedModeBanner: false,
@@ -45,8 +57,38 @@ class MyApp extends StatelessWidget {
           initialRoute: '/',
           routes: {
             '/': (context) => const SplashScreen(),
-            '/login': (context) => const LoginScreen(),
-            '/weather': (context) => const WeatherScreen(),
+            '/login': (context) => MultiProvider(
+              providers: [
+                Provider<AuthService>(
+                  create: (context) =>
+                      AuthService(context.read<LocalStorage>()),
+                ),
+                Provider<AuthRepository>(
+                  create: (context) =>
+                      AuthRepository(context.read<AuthService>()),
+                ),
+              ],
+              child: const LoginScreen(),
+            ),
+            '/weather': (context) => MultiProvider(
+              providers: [
+                Provider<WeatherApiService>(
+                  create: (context) =>
+                      WeatherApiService(restClient: context.read<RestClient>()),
+                ),
+                Provider<LocationService>(
+                  create: (context) => LocationService(),
+                ),
+                Provider<WeatherRepository>(
+                  create: (context) => WeatherRepository(
+                    weatherApi: context.read<WeatherApiService>(),
+                    locationService: context.read<LocationService>(),
+                    storage: context.read<LocalStorage>(),
+                  ),
+                ),
+              ],
+              child: const WeatherScreen(),
+            ),
           },
         ),
       ),

@@ -14,7 +14,7 @@ void main() {
 
   setUp(() {
     mockAuthRepository = MockAuthRepository();
-    authCubit = AuthCubit(mockAuthRepository);
+    authCubit = AuthCubit(authRepository: mockAuthRepository);
   });
 
   tearDown(() {

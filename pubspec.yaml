@@ -2,7 +2,7 @@ name: weather
 description: "A new Flutter project."
 publish_to: "none"
 
-version: 0.1.0
+version: 0.2.0
 
 environment:
   sdk: ^3.9.2
@@ -20,6 +20,7 @@ dependencies:
   geolocator: ^14.0.2
   uuid: ^4.5.1
   http: ^1.5.0
+  intl: ^0.20.1
 
 dev_dependencies:
   flutter_test:

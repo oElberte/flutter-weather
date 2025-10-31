@@ -3,7 +3,9 @@ import 'package:weather/features/auth/data/auth_repository.dart';
 import 'package:weather/features/auth/presentation/auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit(this._authRepository) : super(AuthInitial());
+  AuthCubit({required AuthRepository authRepository})
+    : _authRepository = authRepository,
+      super(AuthInitial());
 
   final AuthRepository _authRepository;
 

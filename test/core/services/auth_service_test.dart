@@ -1,15 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weather/core/interfaces/local_storage.dart';
 import 'package:weather/core/services/auth_service.dart';
+import 'package:weather/core/services/shared_preferences_storage.dart';
 
 void main() {
-  late SharedPreferences prefs;
+  late LocalStorage storage;
   late AuthService authService;
 
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
-    prefs = await SharedPreferences.getInstance();
-    authService = AuthService(prefs);
+    storage = SharedPreferencesStorage();
+    authService = AuthService(storage);
   });
 
   group('AuthService', () {

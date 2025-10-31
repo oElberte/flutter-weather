@@ -18,7 +18,7 @@ void main() {
   Widget createLoginScreen() {
     return MaterialApp(
       home: BlocProvider<AuthCubit>(
-        create: (_) => AuthCubit(mockAuthRepository),
+        create: (_) => AuthCubit(authRepository: mockAuthRepository),
         child: const LoginScreen(),
       ),
     );
