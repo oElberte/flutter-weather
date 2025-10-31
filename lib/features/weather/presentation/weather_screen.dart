@@ -18,8 +18,9 @@ class WeatherScreen extends StatefulWidget {
   static Widget withProviders() => MultiProvider(
     providers: AppProviders.weather(),
     child: BlocProvider(
-      create: (context) =>
-          WeatherCubit(weatherRepository: context.read<WeatherRepository>()),
+      create: (context) => WeatherCubit(
+        weatherRepository: context.read<WeatherRepository>(),
+      ),
       child: const WeatherScreen(),
     ),
   );
@@ -58,13 +59,15 @@ class _WeatherScreenState extends State<WeatherScreen> with SnackbarMixin {
       ),
       body: BlocConsumer<WeatherCubit, WeatherState>(
         listener: (context, state) {
-          if (state is WeatherError && state.cachedData == null) {
-            showError(context, state.message);
-          } else if (state is WeatherLoading && state.cachedData != null) {
-            showInfo(
-              context,
-              'Showing cached data. Check your internet connection.',
-            );
+          if (state is WeatherError) {
+            if (state.cachedData == null) {
+              showError(context, state.message);
+            } else {
+              showInfo(
+                context,
+                'Showing cached data. Check your internet connection.',
+              );
+            }
           }
         },
         builder: (context, state) {
